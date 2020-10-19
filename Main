@@ -1,0 +1,138 @@
+package com.company;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        System.out.println("Welcome to the Bison Store!");
+        Scanner input = new Scanner(System.in);
+        String command;
+
+        // initialise list of products for sale in store
+        ArrayList<String> products = new ArrayList<String>();
+        ArrayList<Double> prices = new ArrayList<Double>();
+        products.add("Bison_Sweater"); prices.add(55.99);
+        products.add("Bison_Tee"); prices.add(14.99);
+        products.add("Bison_Hoodie"); prices.add(23.99);
+        products.add("Bison_Bumpersticker"); prices.add(4.99);
+
+        //initialise lists to be used
+        ArrayList<String> purchases = new ArrayList<String>();
+        ArrayList<Integer> units = new ArrayList<Integer>();
+        ArrayList<Double> invoice = new ArrayList<Double>();
+
+        // ask for user input
+        do
+            {
+                System.out.println("Commands: 1 - Add purchase, 2 - Change purchase, 3 - Show purchases , 4 - Finish transaction");
+                System.out.print("Enter a command: ");
+            command = input.next();
+
+            // add a purchase
+            if (command.equals("1")) {
+                System.out.println("These items are currently in stock:");
+                for (int i = 0; i < products.size(); i++) {
+                    System.out.println(products.get(i) + " - " + prices.get(i));
+                }
+                System.out.print("Enter the name of the product you want to purchase: ");
+                String purchase = input.next();
+
+                // check if item is already in cart
+                if (purchases.contains(purchase)) {
+                    String purchase_to_change = purchase;
+                    System.out.print("Enter the new amount of " + purchase_to_change + "(s) for your cart: ");
+                    Integer new_units = input.nextInt();
+                    int index = purchases.indexOf(purchase_to_change);
+                    int current_amount = units.get(index);
+                    if (new_units < 0)
+                    {
+                        System.out.println("Invalid entry!");
+                    } else if (new_units == 0)
+                    {
+                        units.remove(index);
+                        System.out.println("All " + purchase_to_change + "(s) removed from your cart!");
+                    } else if (new_units != current_amount)
+                    {
+                        units.set(index, new_units);
+                        System.out.println(new_units + " " + purchase_to_change + "(s) now in your cart!");
+                    }
+                } else if(products.contains(purchase)){
+                    System.out.print("Enter the number of " + purchase + "(s) to buy: ");
+                    Integer unit = input.nextInt();
+                        // add item to list of purchases
+                        purchases.add(purchase);
+                        // add no. of units
+                        units.add(unit);
+                        // add unit price
+                        int index = products.indexOf(purchase);
+                        invoice.add(prices.get(index));
+                        System.out.println(unit + " " + purchase + "(s) added to your cart!");
+                } else
+                {
+                    System.out.println("Sorry, this item is not available.");
+                }
+
+            // change a purchase
+            }else if (command.equals("2"))
+            {
+                System.out.print("Enter the name of product to change on your invoice: ");
+                String purchase_to_change = input.next();
+                if (purchases.contains(purchase_to_change))
+                {
+                    System.out.print("Enter the new amount of " + purchase_to_change + "(s) for your cart: ");
+                    Integer new_units = input.nextInt();
+                    int index = purchases.indexOf(purchase_to_change);
+                    int current_amount = units.get(index);
+                    if (new_units < 0)
+                    {
+                        System.out.println("Invalid entry!");
+                    } else if (new_units == 0)
+                    {
+                        units.remove(index);
+                        System.out.println("All " + purchase_to_change + "(s) removed from your cart!");
+                    } else if (new_units != current_amount)
+                    {
+                        units.set(index, new_units);
+                        System.out.println(new_units + " " + purchase_to_change + "(s) now in your cart!");
+                    }
+                } else
+                {
+                    System.out.println("Sorry, " + purchase_to_change + " is not in your cart");
+                }
+
+            // display current invoice
+                } else if (command.equals("3"))
+            {
+                if (purchases.size() == 0)
+                {
+                    System.out.println("You currently have no items in your cart!");
+                } else
+                {
+                    System.out.println("This is your current invoice:");
+                    System.out.println("----------------------------------");
+                    for (int i = 0; i < purchases.size() ; i++) {
+                        System.out.println(purchases.get(i) + " x" + units.get(i) + " @ " + invoice.get(i) + " each");
+                    }
+                    System.out.println("----------------------------------");
+                }
+            }
+
+            // finish transaction and print total
+        } while (!command.equals("4"));
+        System.out.println("Thank you for shopping at the Bison Store! Your itemized bill is below: ");
+        System.out.println("------------------------------------------");
+        for (int i = 0; i < purchases.size() ; i++)
+        {
+            System.out.println(purchases.get(i) + " x" + units.get(i) + " @ " + invoice.get(i) + " each");
+        }
+        double total = 0.00;
+        for (int i = 0; i < invoice.size(); i++)
+        {
+            total = total + (units.get(i) * invoice.get(i));
+        }
+        System.out.println("------------------------------------------");
+        System.out.println("Your total is $" +  total);
+    }
+}
